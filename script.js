@@ -642,6 +642,7 @@ function toggleAll(expand = true) {
 }
 
 // 7. 处理文件导入
+// 7. 处理文件导入
 function handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -649,26 +650,24 @@ function handleFileUpload(event) {
     const reader = new FileReader();
     reader.onload = function (e) {
         try {
-            const json = JSON.parse(e.target.result);
+            let jsonString = e.target.result;
+
+            // 1. 移除单行注释 (// ...)
+            jsonString = jsonString.replace(/\/\/.*$/gm, "");
+
+            // 2. 移除多行注释 (/* ... */)
+            jsonString = jsonString.replace(/\/\*[\s\S]*?\*\//g, "");
+
+            // 3. 移除尾随逗号 (trailing commas)
+            // 匹配: 逗号 + 任意空白 + 右大括号/右中括号
+            jsonString = jsonString.replace(/,(\s*[}\]])/g, '$1');
+
+            const json = JSON.parse(jsonString);
 
             // 更新全局数据
-            // 注意: 这里直接替换 initialData 是不可以的因为它是 const
-            // 我们需要重新定义它或者清空重新赋值，但因为 initialData 是 const, 
-            // 最好的办法是改变 renderEditor 接受参数的方式，或者在这一步重新渲染。
-            // 由于 initialData 是 const，我们无法重新赋值。
-            // 但 renderEditor 本身只是读取数据。
-
             // 清空当前编辑器
             const root = document.getElementById('editor-root');
             root.innerHTML = '';
-
-            // 重新渲染 (使用新数据)
-            // 为了导出功能正常，我们需要更新 initialData 引用的内容，或者修改导出函数。
-            // 简单起见，我们修改导出函数使用 currentData 变量。
-
-            // 重新初始化全局数据引用 (Hack: 由于 initialData 是 const，我们这里不仅渲染，
-            // 还需要确保导出时用的是新数据。更好的做法是把 initialData 改为 let，但它在文件头部。
-            // 我们可以直接用新数据覆盖 initialData 的属性，或者修改 downloadJSON)
 
             // 让我们采用覆盖属性的方法，保持 const 引用不变
             for (const key in initialData) delete initialData[key];
@@ -678,7 +677,7 @@ function handleFileUpload(event) {
             alert("文件导入成功！");
         } catch (error) {
             console.error(error);
-            alert("文件解析失败，请确保是有效的 JSON 文件。");
+            alert("文件解析失败！\n\n请检查文件格式。错误信息:\n" + error.message);
         }
     };
     reader.readAsText(file);

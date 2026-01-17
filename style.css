@@ -219,3 +219,25 @@ input:focus {
 input:hover {
     border-color: #b2bec3;
 }
+
+/* Tutorial Box */
+.tutorial-box {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tutorial-box h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
+    color: #856404;
+}
+
+.tutorial-box p {
+    margin: 0;
+    font-size: 0.95em;
+}

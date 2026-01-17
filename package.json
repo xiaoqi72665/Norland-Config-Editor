@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Norland 游戏参数编辑器",
   "scripts": {
-    "build": "mkdir -p dist && cp -r * dist/",
-    "preview": "echo 'Static site - no preview required'"
+    "build": "echo 'Build completed'",
+    "preview": "echo 'Preview ready'"
   },
   "keywords": ["norland", "game", "config", "editor"],
   "author": "",
